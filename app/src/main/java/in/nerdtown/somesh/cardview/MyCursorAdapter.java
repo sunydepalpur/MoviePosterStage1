@@ -7,23 +7,25 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
- * Created by somesh on 04/01/16.
+ * Created by somesh on 24/03/16.
  */
-public class MyAdapter extends BaseAdapter {
+public class MyCursorAdapter extends BaseAdapter {
     public static JSONObject myData;
-    public static boolean ismyadapterpresent = false;
+    public static ArrayList<JSONObject> jsonObjects;
     private Context mContext;
 
-    public MyAdapter(Context c) {
+    public MyCursorAdapter(Context c, ArrayList<JSONObject> jsonObjects) {
         mContext = c;
-        ismyadapterpresent = true;
+        MyCursorAdapter.jsonObjects = jsonObjects;
 
     }
 
@@ -31,15 +33,11 @@ public class MyAdapter extends BaseAdapter {
 
         int count = 0;
 
-        try {
-            if (myData != null)
-                count = myData.getJSONArray("results").length();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if (count >= 10)
-            return 10;
-        else
+
+        if (jsonObjects != null) {
+            count = jsonObjects.size();
+            return count;
+        } else
             return 0;
 
     }
@@ -75,17 +73,17 @@ public class MyAdapter extends BaseAdapter {
             String imagePath = null;
 
             try {
-                JSONObject jsonObject = myData;
-                JSONArray jsonArray = jsonObject.getJSONArray("results");
-                JSONObject jsonObject1 = jsonArray.getJSONObject(position);
-                imagePath = jsonObject1.getString("poster_path");
+                JSONObject jsonObject = jsonObjects.get(position);
+
+
+                imagePath = jsonObject.getString("poster_path");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            Picasso.with(mContext)
-                    .load("http://image.tmdb.org/t/p/w185/" + imagePath)
+            Picasso.with(mContext).load(imagePath)
                     .placeholder(R.drawable.movieplaceholder)
+                    .networkPolicy(NetworkPolicy.OFFLINE)
                     .into(imageViewNew);
 
 
