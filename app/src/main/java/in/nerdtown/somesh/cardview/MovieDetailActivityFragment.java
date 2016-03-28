@@ -315,7 +315,7 @@ public class MovieDetailActivityFragment extends Fragment {
 
             uri = "http://api.themoviedb.org/3/movie/";
             movie_id = id;
-            apiKey = "/videos?api_key=" + "538b4d1d9160b4964deefc5589df1b14";
+            apiKey = "/videos?api_key=" + api_key;
 
 
             try {
